@@ -100,6 +100,34 @@
                                 </span>
                             </div>
                         </div>
+
+                        <h3>Applies To</h3>
+                        <p>Commissions should be applied to new Users, Teams or both.</p>
+
+                        <div class="form-group row">
+                            <label class="col-md-4 col-form-label text-md-right">{{__('Apply to Users')}}</label>
+
+                            <div class="col-md-1">
+                                <input type="checkbox" class="form-control" :class="{'is-invalid': addForm.errors.has('apply_to_users')}" name="apply_to_users" v-model="addForm.apply_to_users">
+
+                                <span class="invalid-feedback" v-show="addForm.errors.has('apply_to_users')">
+                                    @{{ addForm.errors.get('apply_to_users') }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-md-4 col-form-label text-md-right">{{__('Apply to Teams')}}</label>
+
+                            <div class="col-md-1">
+                                <input type="checkbox" class="form-control" :class="{'is-invalid': addForm.errors.has('apply_to_teams')}" name="apply_to_teams" v-model="addForm.apply_to_teams">
+
+                                <span class="invalid-feedback" v-show="addForm.errors.has('apply_to_teams')">
+                                    @{{ addForm.errors.get('apply_to_teams') }}
+                                </span>
+                            </div>
+                        </div>
+
                     </form>
                 </div>
 
@@ -114,4 +142,4 @@
             </div>
         </div>
     </div>
-</affiliates-spark-kiosk-add-affiliate>
+    </affiliates-spark-kiosk-add-affiliate>

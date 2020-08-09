@@ -15,5 +15,7 @@ $factory->define(AffiliatePlan::class, function (Faker $faker) {
         'months_of_discount' => $faker->randomFloat(0,0,24),
         'discount_percentage' => $faker->randomFloat(0,0,50),
         'discount_amount' => $faker->randomFloat(2,0,5),
+        'apply_to_users' => $faker->boolean(),
+        'apply_to_teams' => $faker->boolean()
     ];
 });

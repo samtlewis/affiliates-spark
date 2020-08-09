@@ -13,7 +13,9 @@ Vue.component('affiliates-spark-kiosk-add-affiliate-plan', {
                 level_2_months_of_commission: 0,
                 level_2_commission_percentage: 0,
                 level_2_commission_amount: 0,
-            }),      
+                apply_to_users: 1,
+                apply_to_teams: 0
+            }),
         };
     },
     methods: {

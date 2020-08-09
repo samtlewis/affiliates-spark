@@ -44,8 +44,12 @@ class Affiliate extends Model
         $plans = $interval == 'monthly' ? StaticOptions::allMonthlyPlans() : StaticOptions::allYearlyPlans();
 
         foreach ($plans as $plan) {
-            $total += $this->getRecurringRevenueByPlan($plan, 'subscriptions', 'userReferrals', 'user_id');
-            $total += $this->getRecurringRevenueByPlan($plan, 'team_subscriptions', 'teamReferrals', 'team_id');
+            if ($this->plan->apply_to_users === 1) {
+                $total += $this->getRecurringRevenueByPlan($plan, 'subscriptions', 'userReferrals', 'user_id');
+            }
+            if ($this->plan->apply_to_teams === 1) {
+                $total += $this->getRecurringRevenueByPlan($plan, 'team_subscriptions', 'teamReferrals', 'team_id');
+            }
         }
 
         return $total * $this->commissionPercentage();
@@ -115,13 +119,27 @@ class Affiliate extends Model
 
     public function referralCount()
     {
-        return $this->userReferrals()->count() + $this->teamReferrals()->count();
+        $count = 0;
+        if ($this->plan->apply_to_users === 1) $count += $this->userReferrals()->count();
+        if ($this->plan->apply_to_teams === 1) $count += $this->teamReferrals()->count();
+
+        return  $count;
+    }
+
+    public function getActiveRelationships()
+    {
+        $relationships = [];
+        if ($this->plan->apply_to_users === 1) $relationships[] = 'userReferrals';
+        if ($this->plan->apply_to_teams === 1) $relationships[] = 'teamReferrals';
+
+        return $relationships;
     }
 
     public function freeReferralCount()
     {
         $count = 0;
-        foreach (['userReferrals', 'teamReferrals'] as $relationship_function) {
+
+        foreach ($this->getActiveRelationships() as $relationship_function) {
             foreach ($this->$relationship_function()->get() as $referral) {
                 if ($referral->planName() == 'free') {
                     $count++;
@@ -135,7 +153,7 @@ class Affiliate extends Model
     public function planCounts()
     {
         $plans = [];
-        foreach (['userReferrals', 'teamReferrals'] as $relationship_function) {
+        foreach ($this->getActiveRelationships() as $relationship_function) {
             foreach ($this->$relationship_function()->get() as $referral) {
                 if (array_key_exists($referral->planName(), $plans)) {
                     $plans[$referral->planName()]++;
